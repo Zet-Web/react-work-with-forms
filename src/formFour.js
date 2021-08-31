@@ -4,6 +4,7 @@ import { validate } from './utils/validate';
 
 class FormFour extends Component {
   state = {
+    maxAge: 99,
     loading: false,
     formData: {
       name: {
@@ -36,9 +37,49 @@ class FormFour extends Component {
         touched: false,
         validationMessage: '',
       },
+      age: {
+        element: 'select',
+        value: '',
+        config: {
+          name: 'age_input',
+        },
+        validation: {
+          required: true,
+          minNum: 20,
+        },
+        valid: false,
+        touched: false,
+        validationMessage: '',
+      },
+      message: {
+        element: 'textarea',
+        value: '',
+        config: {
+          name: 'message_input',
+          rows: 3,
+          placeholder: 'Enter your message',
+        },
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched: false,
+        validationMessage: '',
+      },
     },
   };
+  generateOptions = () => {
+    const ageArray = [];
+    for (let i = 1; i < this.state.maxAge; i++) {
+      ageArray.push(i);
+    }
 
+    return ageArray.map((value, i) => (
+      <option key={i} value={value}>
+        {value}
+      </option>
+    ));
+  };
   updateForm = (element) => {
     const newFormData = { ...this.state.formData };
     const newElement = {
@@ -78,7 +119,7 @@ class FormFour extends Component {
         this.setState({ loading: false });
         this.onSuccess();
       }, 2000);
-      // console.log('Submit form with', dataToSubmit);
+      console.log('Submit form with', dataToSubmit);
     } else {
       alert('Sorry the form is not valid');
     }
@@ -120,6 +161,27 @@ class FormFour extends Component {
                 id='lastname'
                 change={(element) => this.updateForm(element)}
               />
+            </div>
+            <div className='form-group'>
+              <label htmlFor=''>Age</label>
+              <FormField
+                formData={this.state.formData.age}
+                id='age'
+                change={(element) => this.updateForm(element)}
+              >
+                <option value=''>Select Age</option>
+                {this.generateOptions()}
+              </FormField>
+            </div>
+            <div className='form-group'>
+              <label htmlFor='message_input'>Message</label>
+              <FormField
+                formData={this.state.formData.message}
+                id='message'
+                change={(element) => this.updateForm(element)}
+              >
+                {' '}
+              </FormField>
             </div>
             <button
               type='submit'
